@@ -18,7 +18,7 @@ def load_model():
     global model
     if model is None:
         try:
-            model_path = os.path.join(os.path.dirname(__file__), '..', 'model', 'fraud_model.pkl')
+            model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'best_model.pkl')
             model = joblib.load(model_path)
         except Exception as e:
             print(f"Warning: Could not load model: {str(e)}")

@@ -5,7 +5,7 @@ import numpy as np
 def load_model():
     """Load the trained model"""
     try:
-        model_path = os.path.join(os.path.dirname(__file__), '..', 'model', 'fraud_model.pkl')
+        model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'best_model.pkl')
         return joblib.load(model_path)
     except Exception as e:
         print(f"Warning: Could not load model: {str(e)}")
