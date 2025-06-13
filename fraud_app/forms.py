@@ -6,12 +6,11 @@ class TransactionForm(forms.Form):
     amount = forms.DecimalField(
         max_digits=10,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal('0.01'))],
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter amount'})
     )
     merchant_name = forms.CharField(
         max_length=100,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter merchant name'})
     )
     transaction_date = forms.DateTimeField(
         widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'})
@@ -19,16 +18,15 @@ class TransactionForm(forms.Form):
     transaction_type = forms.ChoiceField(
         choices=[
             ('purchase', 'Purchase'),
-            ('refund', 'Refund'),
             ('transfer', 'Transfer'),
-            ('withdrawal', 'Withdrawal')
-        ],  
+            ('withdrawal', 'Withdrawal'),
+            ('deposit', 'Deposit')
+        ],
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     location = forms.CharField(
         max_length=100,
-        required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter location'})
     )
 
 class FraudReportForm(forms.Form):

@@ -9,32 +9,28 @@
             <h2>Welcome to the Fraud Detection System</h2>
         </div>
         <div class="card-body">
-            <p class="lead">This system helps you detect and report fraudulent transactions.</p>
+            <p class="lead">This system helps you detect fraudulent transactions using machine learning.</p>
+            
             <div class="row mt-4">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Dashboard</h5>
-                            <p class="card-text">View your transaction analytics and monitoring features.</p>
-                            <a href="{% url 'fraud_app:dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+                            <h5 class="card-title">Check Transaction</h5>
+                            <p class="card-text">Enter transaction details to check for potential fraud.</p>
+                            <form method="post" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" class="btn btn-primary">Check Transaction</button>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Analytics</h5>
-                            <p class="card-text">Explore detailed insights and reports.</p>
-                            <a href="{% url 'fraud_app:analytics' %}" class="btn btn-primary">Go to Analytics</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Report Fraud</h5>
-                            <p class="card-text">Report suspicious transactions.</p>
-                            <a href="{% url 'fraud_app:report_fraud' %}" class="btn btn-primary">Report Fraud</a>
+                            <h5 class="card-title">Train Model</h5>
+                            <p class="card-text">Train a new fraud detection model with the latest data.</p>
+                            <a href="{% url 'fraud_app:train_model' %}" class="btn btn-primary">Train Model</a>
                         </div>
                     </div>
                 </div>

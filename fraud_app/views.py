@@ -5,8 +5,6 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import JsonResponse
 from .forms import TransactionForm, FraudReportForm, FeedbackForm
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 from src.model_training import train_models, get_models
 from src.predict import predict_fraud
 from src.data_loader import load_data
@@ -174,37 +172,14 @@ def get_transaction_detail(request, transaction_id):
     }
     return JsonResponse({'transaction': transaction})
 
-# @login_required
 def dashboard(request):
-    """Dashboard view placeholder"""
+    """Dashboard view"""
     return render(request, 'dashboard.html')
 
-# @login_required
 def analytics(request):
-    """Analytics view placeholder"""
+    """Analytics view"""
     return render(request, 'analytics.html')
 
-def register(request):
-    """User registration view"""
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Registration successful! You can now log in.')
-            return redirect('login')
-    else:
-        form = UserCreationForm()
-    return render(request, 'registration/register.html', {'form': form})
-
-def custom_404(request, exception):
-    """Custom 404 error handler"""
-    return render(request, '404.html', status=404)
-
-def custom_500(request):
-    """Custom 500 error handler"""
-    return render(request, '500.html', status=500)
-
-@login_required
 def train_model(request):
     """View to handle model training"""
     if request.method == 'POST':
@@ -221,11 +196,19 @@ def train_model(request):
             model = best_model
             
             messages.success(request, 'Model trained successfully!')
-            return redirect('fraud_app:dashboard')
+            return redirect('fraud_app:home')
         except Exception as e:
             messages.error(request, f'Error training model: {str(e)}')
-            return redirect('fraud_app:dashboard')
+            return redirect('fraud_app:home')
     
     return render(request, 'train_model.html', {
         'available_models': list(get_models().keys())
     })
+
+def custom_404(request, exception):
+    """Custom 404 error handler"""
+    return render(request, '404.html', status=404)
+
+def custom_500(request):
+    """Custom 500 error handler"""
+    return render(request, '500.html', status=500)
