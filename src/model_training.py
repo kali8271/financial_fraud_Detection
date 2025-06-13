@@ -46,7 +46,7 @@ def train_models(X, y):
     for name, model in models.items():
         print(f"\n🔍 Training {name}...")
         model.fit(X_train, y_train)
-        score = evaluate_model(model, X_test, y_test, name)
+        score = evaluate_model(model, X_test, y_test)
 
         if score > best_score:
             best_score = score
