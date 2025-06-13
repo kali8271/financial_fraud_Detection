@@ -5,10 +5,27 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import JsonResponse
 from .forms import TransactionForm, FraudReportForm, FeedbackForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from src.model_training import train_models, get_models
+from src.predict import predict_fraud
+from src.data_loader import load_data
+from src.preprocessing import preprocess_data
 
-# Load the model (only once)
-model_path = os.path.join(os.path.dirname(__file__), '..', 'model', 'fraud_model.pkl')
-model = joblib.load(model_path)
+# Global variable for the model
+model = None
+
+def load_model():
+    """Load the fraud detection model"""
+    global model
+    if model is None:
+        try:
+            model_path = os.path.join(os.path.dirname(__file__), '..', 'model', 'fraud_model.pkl')
+            model = joblib.load(model_path)
+        except Exception as e:
+            print(f"Warning: Could not load model: {str(e)}")
+            model = None
+    return model
 
 def home(request):
     """Home page view with transaction form"""
@@ -24,8 +41,7 @@ def home(request):
                 'location': form.cleaned_data['location']
             }
             
-            # TODO: Add your fraud detection logic here
-            # For now, using a simple example
+            # Calculate risk score
             risk_score = calculate_risk_score(transaction_data)
             is_fraud = risk_score > 0.7  # Example threshold
             
@@ -52,11 +68,8 @@ def report_fraud(request):
                 'evidence': form.cleaned_data['evidence']
             }
             
-            # TODO: Add your fraud report processing logic here
-            # For example, save to database, notify security team, etc.
-            
             messages.success(request, 'Fraud report submitted successfully. Our team will review it shortly.')
-            return redirect('home')
+            return redirect('fraud_app:home')
     else:
         form = FraudReportForm()
     
@@ -74,11 +87,8 @@ def submit_feedback(request):
                 'confidence_rating': form.cleaned_data['confidence_rating']
             }
             
-            # TODO: Add your feedback processing logic here
-            # For example, update model training data, improve detection accuracy
-            
             messages.success(request, 'Thank you for your feedback!')
-            return redirect('home')
+            return redirect('fraud_app:home')
     else:
         form = FeedbackForm()
     
@@ -86,10 +96,23 @@ def submit_feedback(request):
 
 def calculate_risk_score(transaction_data):
     """
-    Calculate risk score for a transaction
-    This is a placeholder function - replace with your actual risk calculation logic
+    Calculate risk score for a transaction using the trained model
     """
-    # Example risk calculation (replace with your actual logic)
+    try:
+        # Use the src predict module
+        features = np.array([[
+            float(transaction_data['amount']),
+            # Add other features as needed
+        ]])
+        return predict_fraud(features)
+    except Exception as e:
+        print(f"Warning: Prediction failed: {str(e)}")
+        return calculate_fallback_risk_score(transaction_data)
+
+def calculate_fallback_risk_score(transaction_data):
+    """
+    Fallback risk calculation when model prediction fails
+    """
     base_risk = 0.5
     
     # Adjust risk based on amount
@@ -120,3 +143,89 @@ def get_transaction_history(request):
         }
     ]
     return JsonResponse({'transactions': transactions})
+
+def transaction_detail(request, transaction_id):
+    """View transaction details"""
+    # TODO: Implement actual transaction retrieval from database
+    # This is a placeholder response
+    transaction = {
+        'id': transaction_id,
+        'amount': 100.00,
+        'merchant': 'Example Store',
+        'date': '2024-03-20',
+        'status': 'completed',
+        'risk_score': 0.3,
+        'is_fraud': False
+    }
+    return render(request, 'transaction_detail.html', {'transaction': transaction})
+
+def get_transaction_detail(request, transaction_id):
+    """API endpoint to get transaction details"""
+    # TODO: Implement actual transaction retrieval from database
+    # This is a placeholder response
+    transaction = {
+        'id': transaction_id,
+        'amount': 100.00,
+        'merchant': 'Example Store',
+        'date': '2024-03-20',
+        'status': 'completed',
+        'risk_score': 0.3,
+        'is_fraud': False
+    }
+    return JsonResponse({'transaction': transaction})
+
+# @login_required
+def dashboard(request):
+    """Dashboard view placeholder"""
+    return render(request, 'dashboard.html')
+
+# @login_required
+def analytics(request):
+    """Analytics view placeholder"""
+    return render(request, 'analytics.html')
+
+def register(request):
+    """User registration view"""
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Registration successful! You can now log in.')
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
+
+def custom_404(request, exception):
+    """Custom 404 error handler"""
+    return render(request, '404.html', status=404)
+
+def custom_500(request):
+    """Custom 500 error handler"""
+    return render(request, '500.html', status=500)
+
+@login_required
+def train_model(request):
+    """View to handle model training"""
+    if request.method == 'POST':
+        try:
+            # Load and preprocess data
+            data = load_data()
+            X, y = preprocess_data(data)
+            
+            # Train models and get the best one
+            best_model = train_models(X, y)
+            
+            # Update the global model
+            global model
+            model = best_model
+            
+            messages.success(request, 'Model trained successfully!')
+            return redirect('fraud_app:dashboard')
+        except Exception as e:
+            messages.error(request, f'Error training model: {str(e)}')
+            return redirect('fraud_app:dashboard')
+    
+    return render(request, 'train_model.html', {
+        'available_models': list(get_models().keys())
+    })

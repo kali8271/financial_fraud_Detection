@@ -3,70 +3,41 @@
 {% block title %}Home - Fraud Detection System{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Transaction Analysis</h4>
-            </div>
-            <div class="card-body">
-                <form method="post" class="needs-validation" novalidate>
-                    {% csrf_token %}
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.amount.id_for_label }}" class="form-label">Amount</label>
-                        {{ form.amount }}
-                        {% if form.amount.errors %}
-                        <div class="invalid-feedback d-block">
-                            {{ form.amount.errors }}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Welcome to the Fraud Detection System</h2>
+        </div>
+        <div class="card-body">
+            <p class="lead">This system helps you detect and report fraudulent transactions.</p>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Dashboard</h5>
+                            <p class="card-text">View your transaction analytics and monitoring features.</p>
+                            <a href="{% url 'fraud_app:dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
                         </div>
-                        {% endif %}
                     </div>
-
-                    <div class="mb-3">
-                        <label for="{{ form.merchant_name.id_for_label }}" class="form-label">Merchant Name</label>
-                        {{ form.merchant_name }}
-                        {% if form.merchant_name.errors %}
-                        <div class="invalid-feedback d-block">
-                            {{ form.merchant_name.errors }}
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Analytics</h5>
+                            <p class="card-text">Explore detailed insights and reports.</p>
+                            <a href="{% url 'fraud_app:analytics' %}" class="btn btn-primary">Go to Analytics</a>
                         </div>
-                        {% endif %}
                     </div>
-
-                    <div class="mb-3">
-                        <label for="{{ form.transaction_date.id_for_label }}" class="form-label">Transaction Date</label>
-                        {{ form.transaction_date }}
-                        {% if form.transaction_date.errors %}
-                        <div class="invalid-feedback d-block">
-                            {{ form.transaction_date.errors }}
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Report Fraud</h5>
+                            <p class="card-text">Report suspicious transactions.</p>
+                            <a href="{% url 'fraud_app:report_fraud' %}" class="btn btn-primary">Report Fraud</a>
                         </div>
-                        {% endif %}
                     </div>
-
-                    <div class="mb-3">
-                        <label for="{{ form.transaction_type.id_for_label }}" class="form-label">Transaction Type</label>
-                        {{ form.transaction_type }}
-                        {% if form.transaction_type.errors %}
-                        <div class="invalid-feedback d-block">
-                            {{ form.transaction_type.errors }}
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="{{ form.location.id_for_label }}" class="form-label">Location (Optional)</label>
-                        {{ form.location }}
-                        {% if form.location.errors %}
-                        <div class="invalid-feedback d-block">
-                            {{ form.location.errors }}
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">Analyze Transaction</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

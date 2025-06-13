@@ -12,9 +12,13 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Add src directory to Python path
+sys.path.append(os.path.join(BASE_DIR, 'src'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -41,6 +45,7 @@ INSTALLED_APPS = [
     
     # Local apps
     'fraud_app.apps.FraudAppConfig',
+    'src.apps.SrcConfig',  # Add src app configuration
     
     # Third party apps
     'rest_framework',

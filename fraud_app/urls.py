@@ -16,14 +16,12 @@ urlpatterns = [
     
     # API endpoints
     path('api/transactions/', views.get_transaction_history, name='transaction_history'),
-    path('api/transactions/<str:transaction_id>/', views.get_transaction_detail, name='api_transaction_detail'),
+    path('api/transactions/<str:transaction_id>/', views.get_transaction_detail, name='transaction_detail_api'),
     path('api/risk-score/', views.calculate_risk_score, name='api_risk_score'),
     
     # Dashboard and Analytics
     path('dashboard/', views.dashboard, name='dashboard'),
     path('analytics/', views.analytics, name='analytics'),
-    
-    # Error pages
-    path('404/', views.handler404, name='404'),
-    path('500/', views.handler500, name='500'),
+    path('register/', views.register, name='register'),
+    path('train-model/', views.train_model, name='train_model'),
 ]

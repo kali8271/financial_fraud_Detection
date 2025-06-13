@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Logged Out - Fraud Detection System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Logged Out</h2>
+        </div>
+        <div class="card-body">
+            <p>You have been successfully logged out.</p>
+            <a href="{% url 'login' %}" class="btn btn-primary">Login Again</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 
