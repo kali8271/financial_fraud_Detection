@@ -26,5 +26,9 @@ python main.py
 ```
 
 ## Dataset
-Use the [Kaggle Credit Card Fraud Detection dataset](https://www.kaggle.com/mlg-ulb/creditcardfraud).
+## Dataset
+Due to GitHub's file size limits, the dataset `creditcard.csv` is not included in the repository.
+
+Please download it from: [Kaggle - Credit Card Fraud Detection](https://www.kaggle.com/mlg-ulb/creditcardfraud)
+
 
