@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Transaction Result - Fraud Detection System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header {% if is_fraud %}bg-danger{% else %}bg-success{% endif %} text-white">
+                <h4 class="mb-0">
+                    {% if is_fraud %}
+                    ⚠️ Potential Fraud Detected
+                    {% else %}
+                    ✅ Transaction Appears Legitimate
+                    {% endif %}
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>Transaction Details</h5>
+                    <table class="table">
+                        <tr>
+                            <th>Amount:</th>
+                            <td>${{ transaction.amount }}</td>
+                        </tr>
+                        <tr>
+                            <th>Merchant:</th>
+                            <td>{{ transaction.merchant_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date:</th>
+                            <td>{{ transaction.transaction_date }}</td>
+                        </tr>
+                        <tr>
+                            <th>Type:</th>
+                            <td>{{ transaction.transaction_type|title }}</td>
+                        </tr>
+                        {% if transaction.location %}
+                        <tr>
+                            <th>Location:</th>
+                            <td>{{ transaction.location }}</td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+
+                <div class="mb-4">
+                    <h5>Risk Analysis</h5>
+                    <div class="progress mb-2">
+                        <div class="progress-bar {% if is_fraud %}bg-danger{% else %}bg-success{% endif %}" 
+                             role="progressbar" 
+                             style="width: {{ risk_score|floatformat:0 }}%"
+                             aria-valuenow="{{ risk_score|floatformat:0 }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                            {{ risk_score|floatformat:0 }}%
+                        </div>
+                    </div>
+                    <p class="text-muted">Risk Score: {{ risk_score|floatformat:2 }}</p>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <a href="{% url 'fraud_app:report_fraud' %}" class="btn btn-warning">
+                        Report as Fraud
+                    </a>
+                    <a href="{% url 'fraud_app:home' %}" class="btn btn-secondary">
+                        Analyze Another Transaction
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
