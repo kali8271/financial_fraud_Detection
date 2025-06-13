@@ -5,4 +5,5 @@ matplotlib
 imbalanced-learn
 xgboost
 lightgbm
-
+joblib
+django
